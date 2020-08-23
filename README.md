@@ -15,6 +15,23 @@ Implemented:
 * on compilation error, work will not stop
 * the error log is displayed in red
 * in case of an error, a voice notification will occur
+## Command List
+* `gulp` - Start default task 
+* `gulp build` - Build a project 
+* `gulp server` - Start live server 
+* `gulp project` - Deploy template project 
+* `gulp clean` - Remove build project 
+* `gulp help` - Show info about commands 
+* `gulp watching` - Start watching files 
+* `gulp vendorJS` - Drop bower JS files in project 
+* `gulp vendorCSS` - Drop bower CSS files in project 
+* `gulp build:PUG` - Build PUG files 
+* `gulp build:HTML` - Build HTML files 
+* `gulp build:SCSS` - Build SCSS files 
+* `gulp build:CSS` - Build CSS files 
+* `gulp build:JS` - Build JS files 
+* `gulp build:img` - Build img files 
+* `gulp build:fonts` - Build fonts files
 ## Download
 Initially you need to install
 [Node.js](https://nodejs.org)
