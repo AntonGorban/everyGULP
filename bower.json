@@ -1,0 +1,60 @@
+{
+  "name": "site",
+  "main": "index.js",
+  "license": "ISC",
+  "homepage": "",
+  "overrides": {
+  	"jquery": {
+  		"main": [
+      	"./dist/jquery.min.js"
+      ]
+    },
+    "bootstrap": {
+      "main": [
+        "./dist/css/bootstrap.min.css",
+        "./dist/js/bootstrap.min.js"
+      ]
+    },
+    "normalize.css": {
+    	"main": [
+      	"./normalize.css"
+      ]
+    },
+    "slick-carousel": {
+    	"main": [
+    		"./slick/slick.min.js",
+    		"./slick/slick.css",
+    		"./slick/slick-theme.css"
+      ]
+    },
+    "bxslider-4": {
+    	"main": [
+    		"./dist/jquery.bxslider.min.js",
+	      "./dist/jquery.bxslider.min.css"
+      ]
+    },
+    "arcticModal": {
+    	"main": [
+    		"./arcticmodal/jquery.arcticmodal.css",
+    		"./arcticmodal/jquery.arcticmodal.js",
+    		"./arcticmodal/themes/simple.css"
+      ]
+    },
+    "animate.css": {
+    	"main": [
+    		"./animate.min.css"
+      ]
+    }
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.4.1",
+    "normalize.css": "^8.0.1"
+  }
+}
