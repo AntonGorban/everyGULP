@@ -54,7 +54,12 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "^3.4.1",
-    "normalize.css": "^8.0.1"
+    "jquery": "^3.5.1",
+    "bootstrap": "^4.5.2",
+    "normalize.css": "^8.0.1",
+    "slick-carousel": "^1.8.1",
+    "bxslider-4": "bxSlider#^4.2.15",
+    "arcticModal": "*",
+    "animate.css": "^4.1.0"
   }
 }
