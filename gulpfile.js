@@ -8,9 +8,7 @@ const
 	voice		= true,		// on/off voice action
 	notifies	= true,		// on/off notifications
 	preprocHTML	= 'pug',	// HTML preprocessor
-	preprocCSS	= 'scss',	// CSS preprocessor
-	vCSS		= false,	// Will vendor CSS be used
-	vJS			= false;	// Will vendor JS be used
+	preprocCSS	= 'scss';	// CSS preprocessor
 
 // Colors
 const
@@ -113,23 +111,15 @@ function server() {				// Server
 }
 
 function vendorCSS() {
-	if (vCSS) {
-		return src(bowerFiles("**/*.css"))	// Take vendor files
-			.pipe(changed(path.vendor.css))	// Select newer files
-			.pipe(dest(path.vendor.css));	// Drop in dev
-	} else {
-		console.log(magenta, "vendor CSS do not be used", reset);
-	}
+	return src(bowerFiles("**/*.css"))	// Take vendor files
+		.pipe(changed(path.vendor.css))	// Select newer files
+		.pipe(dest(path.vendor.css));	// Drop in dev
 }
 
 function vendorJS() {
-	if (vJS) {
-		return src(bowerFiles("**/*.js"))	// Take vendor files
-			.pipe(changed(path.vendor.js))	// Select newer files
-			.pipe(dest(path.vendor.js));	// Drop in dev
-	} else {
-		console.log(magenta, "vendor JS do not be used", reset);
-	}
+	return src(bowerFiles("**/*.js"))	// Take vendor files
+		.pipe(changed(path.vendor.js))	// Select newer files
+		.pipe(dest(path.vendor.js));	// Drop in dev
 }
 
 function build_PUG() {
