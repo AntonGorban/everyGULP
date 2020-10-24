@@ -73,6 +73,7 @@ bower i
 - `gulp vendorCSS` - переместить CSS файлы из bower в проект
 - `gulp build:PUG` - собрать файлы PUG
 - `gulp build:HTML` - собрать файлы HTML
+- `gulp build:PHP` - собрать файлы PHP
 - `gulp build:SCSS` - собрать файлы SCSS
 - `gulp build:CSS` - собрать файлы CSS
 - `gulp build:JS` - собрать файлы JS
