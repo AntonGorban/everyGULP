@@ -4,11 +4,13 @@
 
 // Settings
 const
-	coloring	= true,		// on/off coloring of logs
-	voice		= true,		// on/off voice action
-	notifies	= true,		// on/off notifications
-	preprocHTML	= 'pug',	// HTML preprocessor
-	preprocCSS	= 'scss';	// CSS preprocessor
+	coloring	= true,			// on/off coloring of logs
+	voice		= true,			// on/off voice action
+	notifies	= true,			// on/off notifications
+	preprocHTML	= 'pug',		// HTML preprocessor
+	preprocCSS	= 'scss',		// CSS preprocessor
+	usePHP		= false,		// on/off using PHP
+	serverPHP	= 'site:81';	// PHP server domain
 
 // Colors
 const
@@ -53,6 +55,7 @@ const path = {
 	},
 	dist: {		// Build files
 		html:	"dist/",
+		php:	"dist/",
 		js:		"dist/js/",
 		scss:	"dist/css/",
 		css:	"dist/css/",
@@ -62,6 +65,7 @@ const path = {
 	app: {		// Development files
 		pug:	"app/**/*.pug",
 		html:	"app/**/*.html",
+		php:	"app/**/*.php",
 		js:		"app/js/*.js",
 		scss:	"app/css/*.scss",
 		css:	"app/css/*.css",
@@ -71,6 +75,7 @@ const path = {
 	watch: {	// Files for watching
 		pug:	"app/**/*.pug",
 		html:	"app/**/*.html",
+		php:	"app/**/*.php",
 		js:		"app/js/**/*.js",
 		scss:	"app/css/**/*.scss",
 		css:	"app/css/**/*.css",
@@ -103,9 +108,17 @@ function notice(message) {	// Notifications
 
 function server() {				// Server
 	color(cyan);				// Coloring logs
-	browserSync.init(			// Starting server
-		config
-	);
+	if (!usePHP) {
+		browserSync.init(			// Starting server
+			config
+		);		
+	} else {
+		browserSync.init(			// Starting server
+			config, {
+				proxy: serverPHP
+			}
+		);		
+	}
 	notice("Server started");	// Notification
 	speak("server started");	// Voice
 }
@@ -124,9 +137,10 @@ function vendorJS() {
 
 function build_PUG() {
 	return src(path.app.pug)			// Take PUG files
-		.pipe(changed(path.dist.html,	// Select newer files
-			{extension: ".html"
-		}))
+		.pipe(gulpif(usePHP,			// Select newer files
+			changed(path.dist.html, {extension: ".php"}),
+			changed(path.dist.html, {extension: ".html"})
+		))
 		.pipe(pug({						// Convert in HTML
 			pretty: false
 		}))
@@ -141,6 +155,9 @@ function build_PUG() {
 			color(reset);				// Reset color logs
 		})
 
+		.pipe(gulpif(usePHP,			// Renaming to PHP files
+			rename({ extname: ".php"})
+		))
 		.pipe(dest(path.dist.html))		// Drop in build
 		.pipe(reload({					// Reload server
 			stream: true
@@ -149,8 +166,26 @@ function build_PUG() {
 
 function build_HTML() {
 	return src(path.app.html)			// Take HTML files
-		.pipe(changed(path.dist.html))	// Select newer files
+		.pipe(gulpif(usePHP,			// Select newer files
+			changed(path.dist.html, {extension: ".php"}),
+			changed(path.dist.html, {extension: ".html"})
+		))
+		.pipe(gulpif(usePHP,			// Renaming to PHP files
+			rename({ extname: ".php"})
+		))
 		.pipe(dest(path.dist.html))		// Drop in build
+		.pipe(reload({					// Reload server
+			stream: true
+		}));
+}
+
+function build_PHP() {
+	return src(path.app.php)			// Take HTML files
+		.pipe(changed(					// Select newer files
+			path.dist.html,
+			{extension: ".php"}
+		))
+		.pipe(dest(path.dist.php))		// Drop in build
 		.pipe(reload({					// Reload server
 			stream: true
 		}));
@@ -260,6 +295,10 @@ function watching() {
 		console.log(magenta, '~ Logged changes to HTML files ~', reset);
 		build_HTML();
 	});
+	watch([path.watch.php], function (event, cb) {
+		console.log(magenta, '~ Logged changes to PHP files ~', reset);
+		build_PHP();
+	});
 	watch([path.watch.scss], function (event, cb) {
 		console.log(magenta, '~ Logged changes to SCSS files ~', reset);
 		build_SCSS();
@@ -288,6 +327,7 @@ function directory() {
 		})
 		.pipe(dest("./app"))
 		.pipe(dest("./app/css"))
+		.pipe(gulpif(usePHP, dest(".app/php")))
 		.pipe(dest("./app/js"))
 		.pipe(dest("./app/img"))
 		.pipe(dest("./app/fonts"));
@@ -320,6 +360,7 @@ function help() {
 		'gulp vendorCSS': 'Drop bower CSS files in project',
 		'gulp build:PUG': 'Build PUG files',
 		'gulp build:HTML': 'Build HTML files',
+		'gulp build:PHP': 'Build PHP files',
 		'gulp build:SCSS': 'Build SCSS files',
 		'gulp build:CSS': 'Build CSS files',
 		'gulp build:JS': 'Build JS files',
@@ -336,6 +377,7 @@ exports.vendorCSS = vendorCSS; // Task moving vendor CSS
 exports.vendorJS = vendorJS; // Task moving vendor JS
 exports['build:PUG'] = build_PUG; // Task build PUG
 exports['build:HTML'] = build_HTML; // Task build HTML
+exports['build:PHP'] = build_PHP; // Task build HTML
 exports['build:SCSS'] = build_SCSS; // Task build SCSS
 exports['build:CSS'] = build_CSS; // Task build CSS
 exports['build:JS'] = build_JS; // Task build JS
@@ -351,6 +393,7 @@ exports.build = series(
 	parallel(
 		build_PUG,
 		build_HTML,
+		build_PHP,
 		build_SCSS,
 		build_CSS,
 		build_JS,
@@ -364,6 +407,7 @@ exports.default = series(
 		parallel(
 			build_PUG,
 			build_HTML,
+			build_PHP,
 			build_SCSS,
 			build_CSS,
 			build_JS,
