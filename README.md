@@ -73,6 +73,7 @@ Done, now you can create the project structure yourself or write a command to de
 - `gulp vendorCSS` - Drop bower CSS files in project
 - `gulp build:PUG` - Build PUG files
 - `gulp build:HTML` - Build HTML files
+- `gulp build:PHP` - Build PHP files
 - `gulp build:SCSS` - Build SCSS files
 - `gulp build:CSS` - Build CSS files
 - `gulp build:JS` - Build JS files
